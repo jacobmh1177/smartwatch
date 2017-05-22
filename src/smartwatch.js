@@ -3,7 +3,7 @@ var BleAncs = require('ble-ancs');
 var ancs = new BleAncs();
 var notificationList = [];
 //Intialize Display connection
-var edison = require('edison-display');
+var edison = require('edison-oled');
 var display = new edison.Oled();
 //setup screen 
 display.begin();
