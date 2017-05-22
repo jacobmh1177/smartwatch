@@ -1,0 +1,19 @@
+{
+  "name": "smartwatch",
+  "version": "1.0.0",
+  "description": "Intel edison smartwatch",
+  "main": "smartwatch.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jacob Hoffman",
+  "license": "ISC",
+  "dependencies": {
+    "ble-ancs": "0.0.1",
+    "edison-oled": "0.0.5",
+    "johnny-five": "^0.10.13",
+    "oled-font-5x7": "^1.0.0",
+    "png-to-lcd": "^1.0.3",
+    "temporal": "^0.5.0"
+  }
+}
