@@ -19,12 +19,40 @@ var btnSelect = new edison.Gpio(48, edison.INPUT);
 var btnA = new edison.Gpio(49, edison.INPUT);
 var btnB = new edison.Gpio(46, edison.INPUT);
 
+//setup menu
+var menu = require('./menu.js').Menu;
 
-ancs.on('notification', function(notification) {
-	notification.readTitle( function(title) {
-		notification.readMessage( function(message) {
-			console.log("Notification: " + notification);
-			notificationList.push(notification)
-		});
-	});
-});
+//setup battery
+var battery = require('./battery.js');
+var batteryMonitor = new battery.BatteryMonitor();
+
+//setup weather forecaster
+var forecast = require('./weather.js');
+var weatherForecast = new forecast.WeatherForecast();
+// ancs.on('notification', function(notification) {
+// 	notification.readTitle( function(title) {
+// 		notification.readMessage( function(message) {
+// 			console.log("Notification: " + notification);
+// 			notificationList.push(notification)
+// 		});
+// 	});
+// });
+
+var STATE = 'menu';
+
+while (true) {
+	if (STATE === 'menu') {
+		STATE = menu();
+		console.log(STATE);
+	}
+	if (STATE === 'battery') {
+		STATE = batteryMonitor.display();
+		console.log(STATE);
+	}
+	if (STATE === 'weather') {
+		STATE = weatherForecast.display();
+	}
+	else {
+		break;
+	}
+}
