@@ -15,7 +15,7 @@ var btnA = new edison.Gpio(49, edison.INPUT);
 
 var options = {
   APIKey: '8581aa6250437a4b012c73d2beeb3130',
-  timeout: 1000,
+  timeout: 3000,
   exclude: 'minutely, hourly, flags, alerts'
 },
 darksky = new DarkSky(options);
@@ -26,10 +26,11 @@ function WeatherForecast() {
         this.HOME_LONG = -122.170099;
 }
 
-WeatherForecast.prototype.getForecast = function(callback){
+WeatherForecast.prototype.getForecast = function(callback1, callback2){
         darksky.get(this.HOME_LAT, this.HOME_LONG, function (err, res, data) {
                 if (err) throw err;
-        	callback(data);
+        	callback1(data);
+		callback2();
 	});
 }
 
@@ -38,13 +39,13 @@ function displayForecast(data) {
 	display.begin()
 	display.clear(0);
 	display.setCursor(0, 0);
-	display.print("Max Temp: " + Number((data.temperatureMax).toFixed(1)));
+	display.print("High: " + Number((data.temperatureMax).toFixed(1)));
 	display.setCursor(0, 10);
-	display.print("Min Temp: " + Number((data.temperatureMin).toFixed(1)));
+	display.print("Low: " + Number((data.temperatureMin).toFixed(1)));
 	display.setCursor(0, 20);
-	display.print("Rain %: " + precipProbability * 100 + "%");
+	display.print("Rain %: " + data.precipProbability * 100 + "%");
 	display.display();
-	display.setFont(0);
+	display.setFontType(0);
 	while (true) {
 		if (btnLeft.pinRead() === edison.LOW) {
 			return "Weather menu";
@@ -52,34 +53,39 @@ function displayForecast(data) {
 	}	
 }
 
-function display(data) {
+function displayWeather(data) {
 	var MENU_OPTIONS = ["Today", "Tomorrow"];
 	var START_OPTION = 0;
 	var STATE = "Weather menu";
 	while (true) {
 		if (STATE === "Weather menu") {
-			Menu(MENU_OPTIONS, START_OPTION);
-		}
-		if (STATE === "Today") {
+			var newState = Menu(MENU_OPTIONS, START_OPTION, true);
+			STATE = newState[0];
+			START_OPTION = newState[1];
+		} else if (STATE === "Today") {
 			var todayWeather = data.daily.data[0];
-			displayForecast(todayWeather);
-		}
-		if (STATE === "Tomorrow") {
+			STATE = displayForecast(todayWeather);
+		} else if (STATE === "Tomorrow") {
 			var tomorrowWeather = data.daily.data[1];
-			displayForecast(tomorrowWeather);
-		}
-		if (STATE === "Menu") {
+			STATE = displayForecast(tomorrowWeather);
+		} else if (STATE === "Menu") {
 			return "Menu";
-		}		
+		}
 	}	
 }
 
-
-var forecast = new WeatherForecast();
-//forecast.getCurrentForecast(function(data) {
-//	console.log(data.daily.data[7])
-//});
-forecast.display();
+WeatherForecast.prototype.display = function(displayFunc) {
+	var self = this;
+	return new Promise(function(resolve, reject) {
+		self.getForecast(displayFunc, function() {
+			resolve("Menu");
+		});
+	});
+}
+//var forecast = new WeatherForecast();
+//forecast.display(displayWeather).then(function(value) {
+//	console.log(value);
+//})
 var exports = module.exports;
 exports.WeatherForecast = WeatherForecast;
-
+exports.displayWeather = displayWeather;
