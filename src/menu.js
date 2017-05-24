@@ -26,29 +26,46 @@ function displayMenu(boxY) {
         display.setFontType(0);
 }
 
-function Menu() {
-        displayMenu(boxY);
-        while (1) {
+function displayMenu2(menuOptions, boxY) {
+	display.begin();
+	display.clear(0);
+	var menuY = 0;
+	for (var i = 0; i < menuOptions.length; i ++) {
+		display.setCursor(0, menuY);
+		display.print(menuOptions[i]);
+		menuY += 10
+	}
+	display.rect(0, boxY, 64, 10);
+	display.display();
+	display.setFontType(0);
+}
+
+function Menu(menuOptions, selected) {
+        //displayMenu(boxY);
+	var boxY = (selected) * 10;
+	var yMax = (menuOptions.length - 1) * 10;
+        displayMenu2(menuOptions, boxY);
+	while (1) {
                 if (btnDown.pinRead() == edison.LOW) {
-                        if (boxY < 20) {
+                        if (boxY < yMax) {
                                 boxY += 10;
                                 selected += 1;
                         }
-                        displayMenu(boxY);
+                        displayMenu2(menuOptions, boxY);
                 }
                 if (btnUp.pinRead() == edison.LOW) {
                 	if (boxY > 0) {
                                 boxY -= 10;
                                 selected -= 1;
                         }
-                        displayMenu(boxY);
+                        displayMenu2(menuOptions, boxY);
                 }
                 if (btnRight.pinRead() == edison.LOW) {
                         break;
 
                 }
         }
-        return menuOptions[selected];
+        return [menuOptions[selected], selected];
 }
 
 var exports = module.exports;

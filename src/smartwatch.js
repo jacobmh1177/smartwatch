@@ -38,21 +38,23 @@ var weatherForecast = new forecast.WeatherForecast();
 // 	});
 // });
 
-var STATE = 'menu';
-
+var STATE = 'Menu';
+var MENU_OPTIONS = ["Messages", "Weather", "Battery"];
+var START_OPTION = 0;
 while (true) {
-	if (STATE === 'menu') {
-		STATE = menu();
+	if (STATE === 'Menu') {
+		console.log("here");
+		var newState = menu(MENU_OPTIONS, START_OPTION);
+		STATE = newState[0];
+		START_OPTION = newState[1];
 		console.log(STATE);
-	}
-	if (STATE === 'battery') {
+	} else if (STATE === 'Battery') {
 		STATE = batteryMonitor.display();
 		console.log(STATE);
-	}
-	if (STATE === 'weather') {
+	} else if (STATE === 'Weather') {
 		STATE = weatherForecast.display();
-	}
-	else {
+	} else {
+		console.log("breaking!!", STATE);
 		break;
 	}
 }

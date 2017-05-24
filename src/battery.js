@@ -30,9 +30,7 @@ BatteryMonitor.prototype.display = function () {
         while (true) {
                 if (btnLeft.pinRead() == edison.LOW) break;
         }
-        return 'menu';
+        return 'Menu';
 }
 exports.BatteryMonitor = BatteryMonitor;
 
-var bat = new BatteryMonitor();
-bat.display();
