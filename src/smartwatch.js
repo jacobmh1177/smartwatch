@@ -41,14 +41,15 @@ var weatherForecast = new forecast.WeatherForecast();
 var STATE = 'Menu';
 var MENU_OPTIONS = ["Messages", "Weather", "Battery"];
 var START_OPTION = 0;
+var WEATHER = false;
 while (true) {
-	if (STATE === 'Menu') {
+	if (STATE === 'Menu' && !WEATHER) {
 		console.log("here");
 		var newState = menu(MENU_OPTIONS, START_OPTION);
 		STATE = newState[0];
 		START_OPTION = newState[1];
 		console.log(STATE);
-	} else if (STATE === 'Battery') {
+	} else if (STATE === 'Battery' && !WEATHER) {
 		STATE = batteryMonitor.display();
 		console.log(STATE);
 	} else if (STATE === 'Weather') {
