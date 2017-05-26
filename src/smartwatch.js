@@ -27,7 +27,7 @@ var battery = require('./battery.js');
 var batteryMonitor = new battery.BatteryMonitor();
 
 //setup weather forecaster
-var forecast = require('./weather.js');
+var forecast = require('./weatherSync.js');
 var weatherForecast = new forecast.WeatherForecast();
 // ancs.on('notification', function(notification) {
 // 	notification.readTitle( function(title) {
@@ -53,6 +53,7 @@ while (true) {
 		console.log(STATE);
 	} else if (STATE === 'Weather') {
 		STATE = weatherForecast.display();
+		console.log(STATE);
 	} else {
 		console.log("breaking!!", STATE);
 		break;

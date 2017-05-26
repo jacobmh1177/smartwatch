@@ -40,12 +40,12 @@ function displayMenu2(menuOptions, boxY) {
 	display.setFontType(0);
 }
 
-function Menu(menuOptions, selected) {
+function Menu(menuOptions, selected, leftBreakout) {
         //displayMenu(boxY);
 	var boxY = (selected) * 10;
 	var yMax = (menuOptions.length - 1) * 10;
         displayMenu2(menuOptions, boxY);
-	while (1) {
+	while (true) {
                 if (btnDown.pinRead() == edison.LOW) {
                         if (boxY < yMax) {
                                 boxY += 10;
@@ -62,8 +62,10 @@ function Menu(menuOptions, selected) {
                 }
                 if (btnRight.pinRead() == edison.LOW) {
                         break;
-
                 }
+		if (btnLeft.pinRead() === edison.LOW && leftBreakout) {
+			return ["Menu", selected];
+		}
         }
         return [menuOptions[selected], selected];
 }

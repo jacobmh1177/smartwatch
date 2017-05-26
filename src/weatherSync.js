@@ -1,7 +1,6 @@
 "use strict";
 
-var DarkSky = require('forecast.io');
-
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var Menu = require('./menu.js').Menu;
 var edison = require('edison-oled');
 var display = new edison.Oled();
@@ -13,30 +12,27 @@ var btnRight = new edison.Gpio(45, edison.INPUT);
 var btnSelect = new edison.Gpio(48, edison.INPUT);
 var btnA = new edison.Gpio(49, edison.INPUT);
 
-var options = {
-  APIKey: '8581aa6250437a4b012c73d2beeb3130',
-  timeout: 3000,
-  exclude: 'minutely, hourly, flags, alerts'
-},
-darksky = new DarkSky(options);
-
 
 function WeatherForecast() {
         this.HOME_LAT = 37.420943;
         this.HOME_LONG = -122.170099;
+	this.APIKey = '8581aa6250437a4b012c73d2beeb3130';
 }
 
-WeatherForecast.prototype.getForecast = function(callback1, callback2){
-        darksky.get(this.HOME_LAT, this.HOME_LONG, function (err, res, data) {
-                if (err) throw err;
-        	callback1(data);
-		callback2();
-	});
+WeatherForecast.prototype.getForecast = function(){
+	console.log("sending request...");
+	var request = new XMLHttpRequest();
+	request.open('GET', 'https://api.darksky.net/forecast/' + this.APIKey + '/' + this.HOME_LAT + ',' + this.HOME_LONG, false);
+	request.send(null);
+	if (request.status === 200) {
+		this.forecast = JSON.parse(request.responseText);
+	}
+	console.log("got response!");
 }
 
 
 function displayForecast(data) {
-	display.begin()
+	display.begin();
 	display.clear(0);
 	display.setCursor(0, 0);
 	display.print("High: " + Number((data.temperatureMax).toFixed(1)));
@@ -74,18 +70,12 @@ function displayWeather(data) {
 	}	
 }
 
-WeatherForecast.prototype.display = function(displayFunc) {
-	var self = this;
-	return new Promise(function(resolve, reject) {
-		self.getForecast(displayFunc, function() {
-			resolve("Menu");
-		});
-	});
+WeatherForecast.prototype.display = function() {
+	this.getForecast();
+	return displayWeather(this.forecast);	
 }
-//var forecast = new WeatherForecast();
-//forecast.display(displayWeather).then(function(value) {
-//	console.log(value);
-//})
+
+
 var exports = module.exports;
 exports.WeatherForecast = WeatherForecast;
-exports.displayWeather = displayWeather;
+exports.display = WeatherForecast.prototype.display;
