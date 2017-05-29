@@ -1,0 +1,9 @@
+{
+	"Stanford Residences": "OPEN",
+	"Stanford Visitor": "OPEN",
+	"Stanford Secure": "WPA-EAP",
+	"eduroam": "WPA-EAP",
+	"TP-LINK_647A": "WPA-PSK",
+	"SUtilities": "WPA-PSK",
+	"Bogac's Coffee": "WPA-PSK"
+}

@@ -64,7 +64,9 @@ function Menu(menuOptions, selected, leftBreakout) {
 				console.log("scroll down");
 			}	
                         displayMenu2(displayableMenu, boxY);
-			console.log("selected = ", menuOptions[selected]);
+			console.log("top selected = ", topSelected);
+			console.log("selected = ", selected,  menuOptions[selected]);
+			console.log("menu length = ", displayableMenu.length);
                 }
                 if (btnUp.pinRead() == edison.LOW) {
                 	if (boxY >= 0) {
@@ -72,11 +74,14 @@ function Menu(menuOptions, selected, leftBreakout) {
                                 if (selected > 0) selected -= 1;
                         }
 			if (selected === topSelected - 1 && topSelected !== 0) {
-				displayableMenu = menuOptions.slice(selected, topSelected + maxDisplayable);
+				displayableMenu = menuOptions.slice(selected, topSelected + maxDisplayable - 1);
+				topSelected -= 1;
 			}	
                         displayMenu2(displayableMenu, boxY);
-			console.log("selected = ", menuOptions[selected]);
-                }
+			console.log("top selected = ", topSelected);
+			console.log("selected = ", selected, menuOptions[selected]);
+                	console.log("menu length = ", displayableMenu.length);
+		}
                 if (btnRight.pinRead() == edison.LOW) {
                         break;
                 }

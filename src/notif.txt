@@ -1,6 +1,6 @@
 {"event":"added","flags":["silent","important"],"category":"voicemail","categoryCount":1,"uid":2,"title":"Mom","message":"Voicemail","messageSize":9}
-{"event":"added","flags":["silent","important"],"category":"other","categoryCount":6,"uid":9,"title":"Gmail","message":"‎cardinalnights    \n‎[cardinalnights] Wonder Women and More!  •  Wonder Woman Private Screening 6/1/17 Redwood City Century 20. Do⁠ors at ...","messageSize":149}
-{"event":"added","flags":["silent","important"],"category":"voicemail","categoryCount":1,"uid":2,"title":"Mom","message":"Voicemail","messageSize":9}
-{"event":"added","flags":["silent","important"],"category":"other","categoryCount":9,"uid":12,"title":"Gmail","message":"‎Teaspoon Snow Cafe via Square    \n‎Receipt from Teaspoon Snow Cafe  •  Receipt for $4.75 at Teaspoon Snow Cafe on May 28 2017 at 8:28 PM...","messageSize":146}
-{"event":"added","flags":["silent","important"],"category":"other","categoryCount":1,"uid":4,"title":"Instagram","message":"Your Facebook friend Kristen Park is on Instagram as kraystenp.","messageSize":63}
-{"event":"added","flags":["silent","important"],"category":"other","categoryCount":11,"uid":14,"title":"FiveStars","message":"You earned 1 point at Teaspoon . See you next time!","messageSize":51}
+{"event":"added","flags":["silent","important"],"category":"other","categoryCount":10,"uid":13,"title":"Gmail","message":"‎Heather Rae Blundell    \n‎LAIR Swap Tomo⁠rrow (Monday) 8-10  •  Hi everyone, I would really appreciate a Lair swap for my shift tomorrow,...","messageSize":149}
+{"event":"added","flags":[],"category":"other","categoryCount":15,"uid":18,"title":"Gmail","message":"‎Jacob Hoffman    \n⁠‎Hello⁠ W⁠o⁠rl⁠d #2","messageSize":53}
+{"event":"added","flags":[],"category":"other","categoryCount":16,"uid":19,"title":"Gmail","message":"‎Ja⁠cob Hof⁠fman    \n⁠‎t⁠estin⁠g","messageSize":46}
+{"event":"added","flags":[],"category":"other","categoryCount":17,"uid":20,"title":"Gmail","message":"‎Jac⁠ob⁠ Ho⁠ff⁠man    \n‎oops⁠","messageSize":43}
+{"event":"added","flags":[],"category":"other","categoryCount":18,"uid":21,"title":"Gmail","message":"‎Jacob⁠ Hoffma⁠n    \n‎Hell⁠o w⁠orld #⁠3","messageSize":53}

@@ -43,7 +43,7 @@ Watch.prototype.display = function() {
 	display.display();
 	while (true) {
 		if (btnA.pinRead() === edison.LOW) return "Off";
-		if (btnRight.pinRead() === edison.LOW) return "Menu";
+		if (btnRight.pinRead() === edison.LOW || btnLeft.pinRead() === edison.LOW) return "Menu";
 	}
 }
 
