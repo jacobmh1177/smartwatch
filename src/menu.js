@@ -41,30 +41,37 @@ function displayMenu2(menuOptions, boxY) {
 }
 
 function Menu(menuOptions, selected, leftBreakout) {
-        //displayMenu(boxY);
+	var maxDisplayable = 5;
+	var displayableMenu = menuOptions;
+	if (menuOptions.length > maxDisplayable) {
+		displayableMenu = menuOptions.splice(1, maxDisplayable);
+	}
 	var boxY = (selected) * 10;
-	var yMax = (menuOptions.length - 1) * 10;
-        displayMenu2(menuOptions, boxY);
+	var yMax = (displayableMenu.length - 1) * 10;
+        displayMenu2(displayableMenu, boxY);
 	while (true) {
                 if (btnDown.pinRead() == edison.LOW) {
                         if (boxY < yMax) {
                                 boxY += 10;
                                 selected += 1;
                         }
-                        displayMenu2(menuOptions, boxY);
+                        displayMenu2(displayableMenu, boxY);
                 }
                 if (btnUp.pinRead() == edison.LOW) {
                 	if (boxY > 0) {
                                 boxY -= 10;
                                 selected -= 1;
                         }
-                        displayMenu2(menuOptions, boxY);
+                        displayMenu2(displayableMenu, boxY);
                 }
                 if (btnRight.pinRead() == edison.LOW) {
                         break;
                 }
 		if (btnLeft.pinRead() === edison.LOW && leftBreakout) {
 			return ["Menu", selected];
+		}
+		if (btnA.pinRead() === edison.LOW) {
+			return ["Off", selected];
 		}
         }
         return [menuOptions[selected], selected];

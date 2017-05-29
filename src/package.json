@@ -16,6 +16,7 @@
     "johnny-five": "^0.10.13",
     "oled-font-5x7": "^1.0.0",
     "png-to-lcd": "^1.0.3",
+    "sleep": "^5.1.1",
     "sync-request": "^4.0.3",
     "temporal": "^0.5.0",
     "xmlhttprequest": "^1.8.0"
