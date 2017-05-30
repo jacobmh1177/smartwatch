@@ -1,4 +1,5 @@
 var fs = require('fs');
+var menu = require('./menu.js').Menu;
 var edison = require('edison-oled');
 var display = new edison.Oled();
 //setup buttons
@@ -13,11 +14,14 @@ var btnB = new edison.Gpio(46, edison.INPUT);
 
 var ANCS_STORE_FN = '/home/root/smartwatch/src/notif.txt';
 
-function NotifList() {
+function NotifClient() {
 	this.fileName = ANCS_STORE_FN
 }
 
-NotifList.prototype.removeNotif = function(index) {
+NotifClient.prototype.getNumNotifications = function() {
+	return this.notificationList.length;
+}
+NotifClient.prototype.removeNotif = function(index) {
 	this.notificationList.splice(index, 1);
 	//var file = fs.createWriteStream(this.fileName);
 	//this.notificationList.forEach(function(value) {
@@ -31,7 +35,7 @@ NotifList.prototype.removeNotif = function(index) {
 	});
 };
 
-NotifList.prototype.getNotif = function() {
+NotifClient.prototype.getNotif = function() {
 	var text = fs.readFileSync(this.fileName, "utf8");
 	var stringNotificationList = text.split('\n');
 	var notificationList = [];
@@ -43,9 +47,16 @@ NotifList.prototype.getNotif = function() {
 	this.notificationList = notificationList;
 	return this.notificationList;
 };
+NotifClient.prototype.displayDeleteMessage = function () {
+	var options = ["Delete Notif", "Save Notif"];
+	var state = menu(options, 0)[0];
+	return state === "Delete Notif";
+}
 
-NotifList.prototype.displayOne = function(notificationList) {
-	var notification = notificationList[notificationList.length - 1];
+NotifClient.prototype.displayOne = function(notificationList, index, prevState) {
+	var notification = notificationList[index];
+	if (notification === undefined) this.getNotif();
+	notification = notificationList[index];
 	display.begin();
 	display.clear(0);
 	display.setCursor(0,0);
@@ -56,20 +67,56 @@ NotifList.prototype.displayOne = function(notificationList) {
 	display.display();
 	while (true) {
 		if (btnA.pinRead() === edison.LOW) return 'Off';
-		if (btnRight.pinRead() === edison.LOW) return 'Menu';	
+		if (btnLeft.pinRead() === edison.LOW) return prevState;
+		if (btnRight.pinRead() === edison.LOW) {
+			var toDelete = this.displayDeleteMessage();
+			if (toDelete) this.removeNotif(index);
+			return prevState;
+		}	
 	}
 }
 
-NotifList.prototype.clearAll = function() {
+NotifClient.prototype.displayAll = function () {
+	var options = [];
+	this.notificationList.forEach(function(notif){
+		options.push(notif.title);
+	});
+	options.push("Clear all");
+	var STATE = "Notif Menu";
+	var START_OPTION = 0;
+	while (true) {
+		if (STATE === "Notif Menu") {
+			options = [];
+			this.notificationList.forEach(function(notif) {
+				options.push(notif.title);
+			});
+			options.push("Clear all");
+			var newState = menu(options, START_OPTION, true);
+			STATE = newState[0];
+			START_OPTION = newState[1];
+		} else if (STATE === "Clear all") {
+			this.clearAll();
+			return "Menu";
+		} else {
+			var index = options.indexOf(STATE);
+			STATE = this.displayOne(this.notificationList, index, 'Notif Menu');
+		}
+		if (btnLeft.pinRead() === edison.LOW) return "Menu";
+		if (btnA.pinRead() === edison.LOW) return "Off";
+	}	
+}
+
+NotifClient.prototype.clearAll = function() {
 	this.notificationList = [];
 	fs.writeFileSync(this.fileName, "");
 }
-//var list = new NotifList();
+//var list = new NotifClient();
 //list.getNotif();
+//list.displayAll();
 //console.log("------------")
 //console.log(list.notificationList);
 //list.removeNotif(1);
 //list.getNotif();
 //console.log(list.notificationList);
 var exports = module.exports;
-exports.NotifList = NotifList;
+exports.NotifClient = NotifClient;

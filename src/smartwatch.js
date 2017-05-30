@@ -36,7 +36,7 @@ var Watch = new watch.Watch();
 
 //setup ancs
 var ancs = require('./notifUtil.js');
-var NotifList = new ancs.NotifList();
+var NotifClient = new ancs.NotifClient();
 
 //setup wifi scanner
 var scanner = require('./wifiScanner.js');
@@ -47,10 +47,10 @@ var MENU_OPTIONS = ["Notifs", "Weather", "Battery", "Watch", "Wifi", "Test3"];
 var START_OPTION = 0;
 var DISPLAY_ON = false;
 exec('rfkill unblock bluetooth');
-var notificationList = NotifList.getNotif();
+var notificationList = NotifClient.getNotif();
 var oldNumNotifications = notificationList.length;
 while (true) {
-	notificationList = NotifList.getNotif();
+	notificationList = NotifClient.getNotif();
 	var currNumNotifications = notificationList.length;
 	MENU_OPTIONS[0] = "Notifs (" + currNumNotifications + ")";
 	console.log("old = ", oldNumNotifications);
@@ -58,6 +58,7 @@ while (true) {
 	if (currNumNotifications > oldNumNotifications) {
 		DISPLAY_ON = true;
 		STATE = "Notification";
+	} if (currNumNotifications !== oldNumNotifications) {
 		oldNumNotifications = currNumNotifications;
 	}
 	if (btnA.pinRead() === edison.LOW) {
@@ -75,7 +76,10 @@ while (true) {
 	if (STATE === 'Watch') {
 		STATE = Watch.display();	
 	} else if (STATE === 'Notification') {
-		STATE = NotifList.displayOne(notificationList);
+		STATE = NotifClient.displayOne(notificationList, notificationList.length - 1, 'Menu');
+	} else if (STATE === MENU_OPTIONS[0]) {
+		STATE = NotifClient.displayAll();
+		console.log(STATE);
 	} else if (STATE === 'Menu') {
 		var newState = menu(MENU_OPTIONS, START_OPTION);
 		STATE = newState[0];
