@@ -41,30 +41,55 @@ function displayMenu2(menuOptions, boxY) {
 }
 
 function Menu(menuOptions, selected, leftBreakout) {
-        //displayMenu(boxY);
+	var maxDisplayable = 5;
+	var maxOption = menuOptions.length - 1;
+	var displayableMenu = menuOptions;
+	if (menuOptions.length > maxDisplayable) {
+		displayableMenu = menuOptions.slice(0, maxDisplayable);
+	}
 	var boxY = (selected) * 10;
-	var yMax = (menuOptions.length - 1) * 10;
-        displayMenu2(menuOptions, boxY);
+	var yMax = (displayableMenu.length - 1) * 10;
+        displayMenu2(displayableMenu, boxY);
+	var topSelected = 0;
 	while (true) {
+
                 if (btnDown.pinRead() == edison.LOW) {
-                        if (boxY < yMax) {
-                                boxY += 10;
-                                selected += 1;
-                        }
-                        displayMenu2(menuOptions, boxY);
+                        if (boxY <= yMax) {
+                                if (boxY < yMax) boxY += 10;
+                                if (selected < maxOption) selected += 1;
+			}
+			if (selected > displayableMenu.length - 1) {
+				displayableMenu = menuOptions.slice(selected - maxDisplayable + 1, selected + 2);
+				topSelected = selected - maxDisplayable + 1;
+				console.log("scroll down");
+			}	
+                        displayMenu2(displayableMenu, boxY);
+			console.log("top selected = ", topSelected);
+			console.log("selected = ", selected,  menuOptions[selected]);
+			console.log("menu length = ", displayableMenu.length);
                 }
                 if (btnUp.pinRead() == edison.LOW) {
-                	if (boxY > 0) {
-                                boxY -= 10;
-                                selected -= 1;
+                	if (boxY >= 0) {
+                                if (boxY > 0) boxY -= 10;
+                                if (selected > 0) selected -= 1;
                         }
-                        displayMenu2(menuOptions, boxY);
-                }
+			if (selected === topSelected - 1 && topSelected !== 0) {
+				displayableMenu = menuOptions.slice(selected, topSelected + maxDisplayable - 1);
+				topSelected -= 1;
+			}	
+                        displayMenu2(displayableMenu, boxY);
+			console.log("top selected = ", topSelected);
+			console.log("selected = ", selected, menuOptions[selected]);
+                	console.log("menu length = ", displayableMenu.length);
+		}
                 if (btnRight.pinRead() == edison.LOW) {
                         break;
                 }
 		if (btnLeft.pinRead() === edison.LOW && leftBreakout) {
 			return ["Menu", selected];
+		}
+		if (btnA.pinRead() === edison.LOW) {
+			return ["Off", selected];
 		}
         }
         return [menuOptions[selected], selected];
